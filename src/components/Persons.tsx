@@ -54,13 +54,13 @@ export const Persons = () => {
   };
 
   type inputs = {
-    Name: string,
-    idade: number,
-    estadoCivil: string,
-    cpf: string,
-    cidade:string,
-    estado:string
-  }
+    name: string;
+    age: number;
+    estadoCivil: string;
+    cpf: string;
+    cidade: string;
+    estado: string;
+  };
 
   const { handleSubmit, register, reset } = useForm<inputs>();
 
@@ -79,11 +79,11 @@ export const Persons = () => {
             <form className="space-y-6" onSubmit={handleSubmit(enviaForm)}>
               <div className="grid grid-cols-4 items-center text-right gap-3">
                 <Label>Name</Label>
-                <Input {...register("Name",{required:true})} className="w-64"/>
+                <Input {...register("name",{required:true})} className="w-64"/>
               </div>
               <div className="grid grid-cols-4 items-center text-right gap-3">
                 <Label>Idade</Label>
-                <Input {...register("idade",{required:true})} className="w-12"  />
+                <Input {...register("age", { required: true, valueAsNumber: true })} className="w-16" type="number" />
               </div>
               <div className="grid grid-cols-4 items-center text-right gap-3">
                 <Label>Estado civil</Label>
