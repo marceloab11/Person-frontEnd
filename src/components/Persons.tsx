@@ -11,7 +11,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 export const Persons = () => {
   const [persons, setPersons] = useState<Person[]>([]);  
-  
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = persons.slice(indexOfFirstItem, indexOfLastItem);
  
   useEffect(() => {
     fetchPersons();
@@ -62,7 +68,7 @@ export const Persons = () => {
     estado: string;
   };
 
-  const { handleSubmit, register, reset } = useForm<inputs>();
+  const { handleSubmit, register, reset, formState:{errors} } = useForm<inputs>();
 
 
   return (
@@ -91,8 +97,12 @@ export const Persons = () => {
               </div>
               <div className="grid grid-cols-4 items-center text-right gap-3">
                 <Label>CPF</Label>
-                <Input {...register("cpf",{required:true, maxLength:11})} className="w-64"/>
+                <Input
+                 {...register("cpf",{required:true, maxLength:11})}
+                  className="w-64"
+                  />
               </div>
+              {errors.cpf && <p className=" text-red-500 text-center">Insira somente 8 digitos</p>}
               <div className="grid grid-cols-4 items-center text-right gap-3">
                 <Label>Cidade</Label>
                 <Input {...register("cidade",{required:true})} className="w-64" />
@@ -127,7 +137,7 @@ export const Persons = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {persons.map((person) => (
+            {currentItems.map((person) => (
               <TableRow key={person.personId}>  {}
                 <TableCell>{person.name}</TableCell>
                 <TableCell>{person.age}</TableCell>
@@ -140,6 +150,23 @@ export const Persons = () => {
             ))}
           </TableBody>
         </Table>
+        <div className="flex justify-center gap-7 mt-4 mb-4">
+          <Button 
+            onClick={() => setCurrentPage(currentPage - 1)} 
+            disabled={currentPage === 1} 
+            variant="outline"
+          >
+            Anterior
+          </Button>
+          <span>Página {currentPage}</span>
+          <Button 
+            onClick={() => setCurrentPage(currentPage + 1)} 
+            disabled={currentPage >= Math.ceil(persons.length / itemsPerPage)} 
+            variant="outline"
+          >
+            Próximo
+          </Button>
+        </div>
       </div>
     </div>
   );
